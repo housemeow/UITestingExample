@@ -99,7 +99,7 @@ namespace ezLogUITest
             WinCell cell = (WinCell)row.Cells[columnIndex];
             Image image = cell.CaptureImage();
             Bitmap bitmap = new Bitmap(image);
-            Color color = bitmap.GetPixel(0, 0);
+            Color color = bitmap.GetPixel(image.Width / 2, image.Height / 2);
             Assert.AreEqual(colorArgb, color.ToArgb());
         }
 
