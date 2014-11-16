@@ -41,10 +41,11 @@ namespace UITesting
         public void CodedUITestMethod1()
         {
             Robot.ClickLable("colorLabel");
-            Robot.ClickColorDialogColor(10, 10);// Color1(Pink)
-            Robot.ClickColorDialogColor(10, 55);// Color3
-            Robot.ClickColorDialogColor(10, 80);// Color4
-            Robot.ClickColorDialogColor(10, 30);// Color2(Red)
+            Robot.ClickColorDialogColor(1, 1); // Yellow
+            Robot.ClickColorDialogColor(7, 5); // White
+            Robot.ClickColorDialogColor(2, 2); // Green
+            Robot.ClickColorDialogColor(4, 3); // Blue
+            Robot.ClickColorDialogColor(0, 1); // Red
             Robot.ClickColorDialogOk();
             Robot.ClickButton("addButton");
             Robot.AssertCellColor("dataGridView", 0, 1, Color.Red.ToArgb());

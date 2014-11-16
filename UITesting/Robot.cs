@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UITest.Extension;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.TestTools.UITest.Input;
 using System.Drawing;
+using Microsoft.VisualStudio.TestTools.UITesting.HtmlControls;
 
 namespace ezLogUITest
 {
@@ -346,25 +347,27 @@ namespace ezLogUITest
 
         internal static void ClickColorDialogColor(int x, int y)
         {
-            WinWindow colorDialog = FindColorDialog();
-            WinWindow colorWindow = new WinWindow(colorDialog);
-            colorWindow.SearchProperties[WinWindow.PropertyNames.ControlId] = "720";
-            WinText color = new WinText(colorWindow);
-            color.SearchProperties[WinText.PropertyNames.Name] = "基本色彩(B):";
-            Mouse.Click(color, new System.Drawing.Point(x, y));
+            ResetColorDialogPosition();
+            for (int i = 0; i++ < y; )
+                Keyboard.SendKeys("{Down}");
+            for (int i = 0; i++ < x; )
+                Keyboard.SendKeys("{Right}");
+            Keyboard.SendKeys("{Space}");
         }
 
-        private static WinWindow FindColorDialog()
+        private static void ResetColorDialogPosition()
         {
-            WinWindow colorDialog = new WinWindow();
-            colorDialog.SearchProperties[WinWindow.PropertyNames.Name] = "色彩";
-            colorDialog.SearchProperties[WinWindow.PropertyNames.ClassName] = "#32770";
-            return colorDialog;
+            for (int i = 0; i++ < 5; )
+                Keyboard.SendKeys("{Up}");
+            for (int i = 0; i++ < 7; )
+                Keyboard.SendKeys("{Left}");
         }
 
         internal static void ClickColorDialogOk()
         {
-            WinWindow colorDialog = FindColorDialog();
+            WinWindow colorDialog = new WinWindow();
+            colorDialog.SearchProperties[WinWindow.PropertyNames.Name] = "色彩";
+            colorDialog.SearchProperties[WinWindow.PropertyNames.ClassName] = "#32770";
             WinWindow okWindow = new WinWindow(colorDialog);
             okWindow.SearchProperties[WinWindow.PropertyNames.ControlId] = "1";
             WinButton okButton = new WinButton(okWindow);
