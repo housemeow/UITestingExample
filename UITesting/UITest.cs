@@ -41,11 +41,11 @@ namespace UITesting
         public void TestPickedColor()
         {
             Robot.ClickLabel("colorLabel");
-            Robot.ClickColorDialogColor(1, 1); // Yellow
             Robot.ClickColorDialogColor(4, 3); // Blue
             Robot.ClickColorDialogColor(0, 1); // Red
             Robot.ClickColorDialogOk();
             Robot.ClickButton("addButton");
+            Robot.AssertLabelColor("colorLabel", Color.Red);
             Robot.AssertCellColor("dataGridView", 0, 1, Color.Red);
         }
 

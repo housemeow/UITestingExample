@@ -404,5 +404,17 @@ namespace ezLogUITest
             Color pixelColor = bitmap.GetPixel(image.Width / 2, image.Height / 2);
             Assert.AreEqual(pixelColor.ToArgb(), color.ToArgb());
         }
+
+        /// <summary>
+        /// 檢測Label的顏色是否正確
+        /// </summary>
+        /// <param name="labelName">標籤的AccessibleName</param>
+        /// <param name="color">待測顏色</param>
+        public static void AssertLabelColor(string labelName, Color color)
+        {
+            WinText label = (WinText)Robot.FindWinControl(typeof(WinText), labelName, _root);
+            Bitmap bitmap = new Bitmap(label.CaptureImage());
+            Assert.AreEqual(color.ToArgb(), bitmap.GetPixel(0, 0).ToArgb());
+        }
     }
 }
