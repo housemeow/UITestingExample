@@ -92,18 +92,7 @@ namespace ezLogUITest
             Mouse.Click(button);
         }
 
-        public static void AssertCellColor(string dataGridViewName, int rowIndex, int columnIndex, int colorArgb)
-        {
-            WinTable table = (WinTable)Robot.FindWinControl(typeof(WinTable), dataGridViewName, _root);
-            WinRow row = (WinRow)table.Rows[rowIndex];
-            WinCell cell = (WinCell)row.Cells[columnIndex];
-            Image image = cell.CaptureImage();
-            Bitmap bitmap = new Bitmap(image);
-            Color color = bitmap.GetPixel(image.Width / 2, image.Height / 2);
-            Assert.AreEqual(colorArgb, color.ToArgb());
-        }
-
-        internal static void ClickLable(string name)
+        public static void ClickLabel(string name)
         {
             WinText label = (WinText)Robot.FindWinControl(typeof(WinText), name, _root);
             Mouse.Click(label);
@@ -173,7 +162,7 @@ namespace ezLogUITest
             Assert.AreEqual(button.Enabled, assertValue);
         }
 
-        public static void DelteteDataGridViewByIndex(string[] data)
+        public static void DeleteDataGridViewByIndex(string[] data)
         {
             WinTable table = (WinTable)Robot.FindWinControl(typeof(WinTable), data[0], _root);
             WinRow row = new WinRow(table);
@@ -324,16 +313,14 @@ namespace ezLogUITest
             Keyboard.SendKeys(window, KEY_TEXT);
         }
 
-        internal static void AssertWindowVisible(string p)
+        /// <summary>
+        /// 判斷視窗是否存在
+        /// </summary>
+        /// <param name="name">Form的AccessibleName</param>
+        /// <param name="isExist">存在與否</param>
+        public static void AssertWindowExist(string name, bool isExist)
         {
-            WinWindow form = new WinWindow();
-            form.SearchProperties[WinWindow.PropertyNames.Name] = "popUpForm";
-        }
-
-        internal static void AssertWindowExist(string name, bool isExist)
-        {
-            WinWindow form = new WinWindow();
-            form.SearchProperties[WinWindow.PropertyNames.Name] = name;
+            WinWindow form = (WinWindow)Robot.FindWinControl(typeof(WinWindow), name, null);
             int count = form.FindMatchingControls().Count;
             if (isExist)
             {
@@ -345,7 +332,12 @@ namespace ezLogUITest
             }
         }
 
-        internal static void ClickColorDialogColor(int x, int y)
+        /// <summary>
+        /// 在ColorDialog顯示的情況下選取指定的顏色
+        /// </summary>
+        /// <param name="x">X軸的座標，以0開始</param>
+        /// <param name="y">Y軸的座標，以0開始</param>
+        public static void ClickColorDialogColor(int x, int y)
         {
             ResetColorDialogPosition();
             for (int i = 0; i++ < y; )
@@ -355,6 +347,9 @@ namespace ezLogUITest
             Keyboard.SendKeys("{Space}");
         }
 
+        /// <summary>
+        /// 在ColorDialog顯示的情況下回到回到左上角的顏色，作為定位的用途
+        /// </summary>
         private static void ResetColorDialogPosition()
         {
             for (int i = 0; i++ < 5; )
@@ -363,16 +358,51 @@ namespace ezLogUITest
                 Keyboard.SendKeys("{Left}");
         }
 
-        internal static void ClickColorDialogOk()
+        /// <summary>
+        /// 在ColorDialog顯示的情況下點擊確定
+        /// </summary>
+        public static void ClickColorDialogOk()
         {
-            WinWindow colorDialog = new WinWindow();
-            colorDialog.SearchProperties[WinWindow.PropertyNames.Name] = "色彩";
+            WinWindow colorDialog = (WinWindow)Robot.FindWinControl(typeof(WinWindow), "色彩", null);
             colorDialog.SearchProperties[WinWindow.PropertyNames.ClassName] = "#32770";
             WinWindow okWindow = new WinWindow(colorDialog);
             okWindow.SearchProperties[WinWindow.PropertyNames.ControlId] = "1";
-            WinButton okButton = new WinButton(okWindow);
-            okButton.SearchProperties[WinButton.PropertyNames.Name] = "確定";
+            WinButton okButton = (WinButton)Robot.FindWinControl(typeof(WinButton), "確定", okWindow);
             Mouse.Click(okButton);
+        }
+
+        /// <summary>
+        /// 測試表單左上角的顏色
+        /// </summary>
+        /// <param name="name">表單的AccessibleName</param>
+        /// <param name="color">待測試的顏色</param>
+        public static void AssertFormBackColor(string name, Color color)
+        {
+            WinWindow winForm = new WinWindow();
+            winForm.SearchProperties[WinWindow.PropertyNames.Name] = name;
+            WinClient winClient = new WinClient(winForm);
+            winClient.SearchProperties[WinControl.PropertyNames.Name] = name;
+            Image image = winClient.CaptureImage();
+            Bitmap bitmap = new Bitmap(image);
+            Assert.AreEqual(color.ToArgb(), bitmap.GetPixel(0, 0).ToArgb());
+        }
+
+        /// <summary>
+        /// Assert DataGridView所選Cell顯示的顏色(請勿讓Cell反白，否則可能會錯誤)
+        /// </summary>
+        /// <param name="dataGridViewName">DataGridView的AccessibleName</param>
+        /// <param name="rowIndex">Row的Index，以0開始</param>
+        /// <param name="columnIndex">Column的Index，以0開始</param>
+        /// <param name="color">待測顏色</param>
+        public static void AssertCellColor(string dataGridViewName, int rowIndex, int columnIndex, Color color)
+        {
+            WinTable table = (WinTable)Robot.FindWinControl(typeof(WinTable), dataGridViewName, _root);
+            WinRow row = (WinRow)table.Rows[rowIndex];
+            WinCell cell = (WinCell)row.Cells[columnIndex];
+            Image image = cell.CaptureImage();
+            Bitmap bitmap = new Bitmap(image);
+            Color pixelColor = bitmap.GetPixel(image.Width / 2, image.Height / 2);
+            Assert.AreEqual(pixelColor.ToArgb(), color.ToArgb());
         }
     }
 }

@@ -38,17 +38,30 @@ namespace UITesting
 
         [TestMethod()]
         [DeploymentItem("UITestingExample.exe")]
-        public void CodedUITestMethod1()
+        public void TestPickedColor()
         {
-            Robot.ClickLable("colorLabel");
+            Robot.ClickLabel("colorLabel");
             Robot.ClickColorDialogColor(1, 1); // Yellow
-            Robot.ClickColorDialogColor(7, 5); // White
-            Robot.ClickColorDialogColor(2, 2); // Green
             Robot.ClickColorDialogColor(4, 3); // Blue
             Robot.ClickColorDialogColor(0, 1); // Red
             Robot.ClickColorDialogOk();
             Robot.ClickButton("addButton");
-            Robot.AssertCellColor("dataGridView", 0, 1, Color.Red.ToArgb());
+            Robot.AssertCellColor("dataGridView", 0, 1, Color.Red);
+        }
+
+        [TestMethod()]
+        [DeploymentItem("UITestingExample.exe")]
+        public void TestWindowColor()
+        {
+            string[] menuList = { "showMenuItem", "windowMenuItem" };
+            Robot.ClickMenuItem(menuList);
+            Robot.AssertFormBackColor("popUpForm", SystemColors.Control);
+        }
+
+        [TestMethod()]
+        [DeploymentItem("UITestingExample.exe")]
+        public void TestPopUpWindowExist()
+        {
             string[] menuList = { "showMenuItem", "windowMenuItem" };
             Robot.ClickMenuItem(menuList);
             Robot.AssertWindowExist("popUpForm", true);
